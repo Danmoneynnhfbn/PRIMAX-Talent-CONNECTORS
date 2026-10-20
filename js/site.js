@@ -9,6 +9,10 @@
     ["For Employers", "for-employers.html", "employers"],
     ["Contact", "contact.html", "contact"]
   ];
+  const CONTACT_CONFIG = {
+    candidateEmail: "",
+    employerEmail: ""
+  };
   const page = document.body.dataset.page || "";
   const headerRoot = document.getElementById("site-header");
   const footerRoot = document.getElementById("site-footer");
@@ -17,9 +21,9 @@
     headerRoot.innerHTML = `
       <header class="site-header">
         <div class="container header-inner">
-          <a class="brand" href="index.html" aria-label="Primax Career Connectors home">
+          <a class="brand" href="index.html" aria-label="Primax Talent Connectors home">
             <span class="brand-mark" aria-hidden="true"><span></span><i>↗</i></span>
-            <span class="brand-name">PRIMAX<small>CAREER CONNECTORS</small></span>
+            <span class="brand-name">PRIMAX<small>TALENT CONNECTORS</small></span>
           </a>
           <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span class="menu-lines" aria-hidden="true"></span><span class="sr-only">Open navigation menu</span></button>
           <nav class="primary-nav" id="primary-navigation" aria-label="Main navigation">
@@ -52,18 +56,18 @@
       <footer class="site-footer">
         <div class="container footer-main">
           <div class="footer-brand-block">
-            <a class="brand brand-footer" href="index.html" aria-label="Primax Career Connectors home">
+            <a class="brand brand-footer" href="index.html" aria-label="Primax Talent Connectors home">
               <span class="brand-mark" aria-hidden="true"><span></span><i>↗</i></span>
-              <span class="brand-name">PRIMAX<small>CAREER CONNECTORS</small></span>
+              <span class="brand-name">PRIMAX<small>TALENT CONNECTORS</small></span>
             </a>
             <p>Connecting Exceptional Talent<br>to Exceptional Opportunities.</p>
             <span class="remote-note"><span aria-hidden="true">●</span> 100% remote team</span>
           </div>
           <div class="footer-links"><h2>Explore</h2><a href="live-roles.html">Live Roles</a><a href="how-it-works.html">How It Works</a><a href="our-team.html">Our Team</a></div>
-          <div class="footer-links"><h2>Connect</h2><a href="for-employers.html">For Employers</a><a href="contact.html">Contact</a><a href="mailto:contact@primaxcareerconnectors.com">Email Primax</a></div>
+          <div class="footer-links"><h2>Connect</h2><a href="for-employers.html">For Employers</a><a href="contact.html">Contact</a><a href="contact.html#candidate-form">Get in touch</a></div>
           <div class="footer-links"><h2>Information</h2><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
         </div>
-        <div class="container footer-bottom"><p>© 2026 Primax Career Connectors. All rights reserved.</p><p>We connect candidates with hiring companies. We are not the employer.</p></div>
+        <div class="container footer-bottom"><p>© 2026 Primax Talent Connectors. All rights reserved.</p><p>We connect candidates with hiring companies. We are not the employer.</p></div>
       </footer>`;
   }
 
@@ -110,7 +114,7 @@
       <p class="role-detail-description">${escapeHtml(role.description)}</p>
       <h3>Responsibilities</h3><ul>${roleListItems(role.responsibilities)}</ul>
       <h3>Requirements</h3><ul>${roleListItems(role.requirements)}</ul>
-      <div class="notice notice-demo"><p>This example is not a current vacancy. This static site cannot receive or store applications. For direct contact, email <a href="mailto:contact@primaxcareerconnectors.com">contact@primaxcareerconnectors.com</a>.</p></div>
+      <div class="notice notice-demo"><p>This example is not a current vacancy. This static site cannot receive or store applications. Please use the verified Primax Talent Connectors contact address when it is confirmed.</p></div>
       <form class="role-application" data-local-form novalidate>
         <h3>Application interest</h3><p>Use this sample form to see the intended fields. Information is not sent or saved.</p>
         <div class="form-grid">
@@ -223,8 +227,35 @@
       if (feedback) feedback.textContent = "This file is larger than the 5 MB limit.";
       return false;
     }
-    if (feedback) feedback.textContent = file.name + " · " + (file.size / (1024 * 1024)).toFixed(2) + " MB. This file will not be uploaded.";
+    if (feedback) feedback.textContent = file.name + " · " + (file.size / (1024 * 1024)).toFixed(2) + " MB. The file will remain in the browser and may need to be attached manually when you send your email.";
     return true;
+  }
+
+  function formatFormValue(form, field) {
+    if (!field || !field.name || field.disabled) return null;
+    if (field.type === "button" || field.type === "submit" || field.type === "reset" || field.type === "hidden") return null;
+    const label = field.labels && field.labels.length ? field.labels[0].textContent.replace(/\*\s*$/, "").trim() : field.name;
+    let value = "";
+    if (field.type === "checkbox") {
+      value = field.checked ? "Yes" : "No";
+    } else if (field.type === "file") {
+      value = field.files && field.files.length ? field.files[0].name : "No file selected";
+    } else {
+      value = field.value.trim();
+    }
+    if (!value || value === "No" && field.type === "checkbox" && !field.checked) return null;
+    return label + ": " + value;
+  }
+
+  function buildMailtoLink(form, recipientEmail, subject) {
+    const lines = [subject, "", "Submitted from the Primax Talent Connectors website:"];
+    Array.from(form.elements).forEach(function (element) {
+      const entry = formatFormValue(form, element);
+      if (entry) lines.push(entry);
+    });
+    lines.push("", "Note: This email was prepared in the browser. Uploaded CV files cannot be attached reliably through mailto, so the file may need to be attached manually before sending.");
+    const body = lines.join("\n");
+    return "mailto:" + encodeURIComponent(recipientEmail) + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
   }
 
   document.addEventListener("change", function (event) {
@@ -243,7 +274,18 @@
       feedback.classList.add("is-error");
       return;
     }
-    feedback.textContent = "Your information has not been sent or stored. This website has no submission service configured. Please email Primax directly using the address shown above.";
-    feedback.classList.add("is-error");
+    const formType = form.id === "employer-inquiry" || form.dataset.formType === "employer" ? "employer" : "candidate";
+    const recipientEmail = formType === "candidate" ? CONTACT_CONFIG.candidateEmail : CONTACT_CONFIG.employerEmail;
+    if (!recipientEmail) {
+      feedback.textContent = "The verified Primax Talent Connectors contact email for this form is still pending confirmation. Please provide the final verified address before enabling mailto submissions.";
+      feedback.classList.add("is-error");
+      return;
+    }
+    const subject = formType === "candidate" ? "Candidate enquiry: Primax Talent Connectors" : "Employer enquiry: Primax Talent Connectors";
+    const mailtoLink = buildMailtoLink(form, recipientEmail, subject);
+    window.location.href = mailtoLink;
+    feedback.textContent = "Your email app has been opened with the completed information. Because mailto cannot reliably attach uploaded files, please attach the CV manually if required before sending.";
+    feedback.classList.add("is-success");
+    form.reset();
   });
 })();

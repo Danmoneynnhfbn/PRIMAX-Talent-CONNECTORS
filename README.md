@@ -1,4 +1,4 @@
-# Primax Career Connectors
+# Primax Talent Connectors
 
 A lightweight, static website built with HTML, CSS, and vanilla JavaScript. No package installation or build step is needed.
 
@@ -14,7 +14,7 @@ Open `index.html` in a browser. The page links, sample role directory, team filt
 - **Team directory:** edit the practices and `window.PRIMAX_TEAM_PLACEHOLDERS` data in `js/data.js` when approved profile details are available. The current profiles are placeholders, not real employees.
 - **Brand colors and typography:** edit the CSS custom properties at the top of `styles.css`. Sora and Inter are loaded from Google Fonts when available; system fallbacks are provided.
 - **Brand imagery:** replace `LOGO.jpg` and `BANNER.jpg` with approved assets, keeping the same filenames or updating their HTML references.
-- **Contact details:** update the approved addresses in `contact.html`, `js/site.js`, `privacy.html`, and `terms.html` together.
+- **Contact details:** update the verified addresses in `contact.html`, `js/site.js`, `privacy.html`, and `terms.html` together.
 
 ## Important limitations
 
