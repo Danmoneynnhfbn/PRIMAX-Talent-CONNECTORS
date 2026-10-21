@@ -7,11 +7,12 @@
     ["How It Works", "how-it-works.html", "process"],
     ["Our Team", "our-team.html", "team"],
     ["For Employers", "for-employers.html", "employers"],
-    ["Contact", "contact.html", "contact"]
+    ["Contact", "contact.html", "contact"],
+    ["Search", "search.html", "search"]
   ];
   const CONTACT_CONFIG = {
-    candidateEmail: "",
-    employerEmail: ""
+    candidateEmail: "contact@primaxtalentconnectors.com",
+    employerEmail: "partners@primaxtalentconnectors.com"
   };
   const page = document.body.dataset.page || "";
   const headerRoot = document.getElementById("site-header");
@@ -22,8 +23,7 @@
       <header class="site-header">
         <div class="container header-inner">
           <a class="brand" href="index.html" aria-label="Primax Talent Connectors home">
-            <span class="brand-mark" aria-hidden="true"><span></span><i>↗</i></span>
-            <span class="brand-name">PRIMAX<small>TALENT CONNECTORS</small></span>
+            <img src="LOGO.jpg" alt="Primax Talent Connectors">
           </a>
           <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span class="menu-lines" aria-hidden="true"></span><span class="sr-only">Open navigation menu</span></button>
           <nav class="primary-nav" id="primary-navigation" aria-label="Main navigation">
@@ -57,17 +57,15 @@
         <div class="container footer-main">
           <div class="footer-brand-block">
             <a class="brand brand-footer" href="index.html" aria-label="Primax Talent Connectors home">
-              <span class="brand-mark" aria-hidden="true"><span></span><i>↗</i></span>
-              <span class="brand-name">PRIMAX<small>TALENT CONNECTORS</small></span>
+              <img src="LOGO.jpg" alt="Primax Talent Connectors">
             </a>
             <p>Connecting Exceptional Talent<br>to Exceptional Opportunities.</p>
-            <span class="remote-note"><span aria-hidden="true">●</span> 100% remote team</span>
           </div>
           <div class="footer-links"><h2>Explore</h2><a href="live-roles.html">Live Roles</a><a href="how-it-works.html">How It Works</a><a href="our-team.html">Our Team</a></div>
           <div class="footer-links"><h2>Connect</h2><a href="for-employers.html">For Employers</a><a href="contact.html">Contact</a><a href="contact.html#candidate-form">Get in touch</a></div>
           <div class="footer-links"><h2>Information</h2><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a></div>
         </div>
-        <div class="container footer-bottom"><p>© 2026 Primax Talent Connectors. All rights reserved.</p><p>We connect candidates with hiring companies. We are not the employer.</p></div>
+        <div class="container footer-bottom"><p>© 2026 Primax Talent Connectors. All rights reserved.</p></div>
       </footer>`;
   }
 
@@ -77,10 +75,102 @@
     });
   }
 
+  const siteSearchIndex = [
+    {
+      title: "Home",
+      url: "index.html",
+      description: "Primax Talent Connectors connects mid-senior, executive, and C-suite professionals with relevant career opportunities and hiring companies.",
+      keywords: "talent recruitment search firm executive search career opportunities candidates employers connectors career move exclusive access team behind your search confidentiality free"
+    },
+    {
+      title: "Live Roles",
+      url: "live-roles.html",
+      description: "Explore role listings across technology, product, finance, operations, people, commercial, and executive leadership.",
+      keywords: "jobs vacancies roles opportunities director vice president VP CEO chief executive officer finance director product strategy technology operations supply chain people culture HR human resources commercial sales marketing hybrid remote onsite salary SaaS AI fintech private equity banking healthcare life sciences energy manufacturing logistics aviation automotive ecommerce retail real estate media consulting edtech insurance legal gaming construction"
+    },
+    {
+      title: "How It Works",
+      url: "how-it-works.html",
+      description: "Learn how candidates join the network, how Primax looks for relevant opportunities, and how introductions to hiring companies work.",
+      keywords: "candidate journey process confidential connect connector employer hiring company bridge not employer join network source opportunities direct introduction"
+    },
+    {
+      title: "Our Team",
+      url: "our-team.html",
+      description: "Learn about the specialist practices that support candidate and employer connections at Primax Talent Connectors.",
+      keywords: "team connector practice executive leadership technology product finance strategy operations supply chain people culture human resources commercial sales marketing"
+    },
+    {
+      title: "For Employers",
+      url: "for-employers.html",
+      description: "Hiring companies can share a role brief and connect with experienced candidates through Primax Talent Connectors.",
+      keywords: "employer company hiring recruit talent mandate leadership candidates submit role inquiry technology finance operations people culture commercial mid senior C suite"
+    },
+    {
+      title: "Contact",
+      url: "contact.html",
+      description: "Join the candidate network or send a hiring inquiry to Primax Talent Connectors.",
+      keywords: "contact email candidate network CV resume LinkedIn consent employer inquiry company role phone industries target level experience work preference"
+    },
+    {
+      title: "Privacy",
+      url: "privacy.html",
+      description: "Read how the Primax Talent Connectors website handles information submitted through its forms.",
+      keywords: "privacy personal information data form"
+    },
+    {
+      title: "Terms",
+      url: "terms.html",
+      description: "Read information about using the Primax Talent Connectors website and its role listings.",
+      keywords: "terms website listings role"
+    }
+  ];
+
+  const siteSearchForm = document.getElementById("site-search-form");
+  const siteSearchResults = document.getElementById("site-search-results");
+  if (siteSearchForm && siteSearchResults) {
+    const searchInput = siteSearchForm.elements.q;
+    const searchQuery = new URLSearchParams(window.location.search).get("q") || "";
+    searchInput.value = searchQuery;
+    const searchHeading = document.getElementById("site-search-heading");
+    const searchCount = document.getElementById("site-search-count");
+    const normalizedQuery = searchQuery.trim().toLocaleLowerCase();
+    const terms = normalizedQuery.replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean);
+
+    if (!terms.length) {
+      searchHeading.textContent = "Search Primax Talent Connectors";
+      searchCount.textContent = "Enter a word or phrase to search the website.";
+    } else {
+      const matches = siteSearchIndex.map(function (item) {
+        const title = (item.title + " " + item.title.replace(/&/g, "and")).toLocaleLowerCase().replace(/[^a-z0-9\s]/g, " ");
+        const keywords = item.keywords.toLocaleLowerCase().replace(/[^a-z0-9\s]/g, " ");
+        const description = item.description.toLocaleLowerCase().replace(/[^a-z0-9\s]/g, " ");
+        const searchable = title + " " + keywords + " " + description;
+        const score = terms.reduce(function (total, term) {
+          if (!searchable.includes(term)) return -1;
+          return total + (title.includes(term) ? 5 : 0) + (keywords.includes(term) ? 2 : 0);
+        }, 0);
+        return { item: item, score: score };
+      }).filter(function (result) {
+        return result.score >= 0;
+      }).sort(function (first, second) {
+        return second.score - first.score;
+      });
+
+      searchHeading.textContent = "Search results for “" + searchQuery.trim() + "”";
+      searchCount.textContent = matches.length + (matches.length === 1 ? " page found." : " pages found.");
+      siteSearchResults.innerHTML = matches.length
+        ? matches.map(function (result) {
+          return `<li class="site-search-result"><h2><a href="${result.item.url}">${escapeHtml(result.item.title)}</a></h2><p>${escapeHtml(result.item.description)}</p></li>`;
+        }).join("")
+        : '<li class="site-search-empty"><h2>No matching pages</h2><p>Try a broader word, such as “roles”, “candidate”, “employer”, or “contact”.</p></li>';
+    }
+  }
+
   function roleCard(role) {
     const salary = role.salary ? `<span>${escapeHtml(role.salary)}</span>` : "";
     return `<article class="role-card">
-      <div class="role-card-top"><span class="role-sample">Example role</span><span class="role-level">${escapeHtml(role.level)}</span></div>
+      <div class="role-card-top"><span class="role-level">${escapeHtml(role.level)}</span></div>
       <p class="role-category">${escapeHtml(role.industry)} <span aria-hidden="true">·</span> ${escapeHtml(role.function)}</p>
       <h3><button class="role-title-button" type="button" data-role-id="${escapeHtml(role.id)}">${escapeHtml(role.title)}</button></h3>
       <p class="role-summary">${escapeHtml(role.summary)}</p>
@@ -92,13 +182,17 @@
   const roles = window.PRIMAX_ROLES || [];
   const roleLists = document.querySelectorAll("[data-role-list]");
   roleLists.forEach(function (root) {
-    if (root.dataset.roleList === "featured") root.innerHTML = roles.slice(0, 6).map(roleCard).join("");
+    if (root.dataset.roleList === "featured") {
+      root.innerHTML = roles.length
+        ? roles.slice(0, 6).map(roleCard).join("")
+        : '<p class="role-empty-featured">No open roles are listed right now. <a href="contact.html#candidate-form">Join our talent network</a> to hear about future roles.</p>';
+    }
   });
 
   const roleDialog = document.createElement("dialog");
   roleDialog.className = "role-dialog";
   roleDialog.setAttribute("aria-label", "Role details and application interest");
-  roleDialog.innerHTML = `<div class="role-dialog-head"><span class="role-sample">Demonstration content · not a verified vacancy</span><button class="dialog-close" type="button" aria-label="Close role details">×</button></div><div class="role-dialog-content"></div>`;
+  roleDialog.innerHTML = `<div class="role-dialog-head"><button class="dialog-close" type="button" aria-label="Close role details">×</button></div><div class="role-dialog-content"></div>`;
   document.body.appendChild(roleDialog);
 
   function roleListItems(items) {
@@ -114,16 +208,16 @@
       <p class="role-detail-description">${escapeHtml(role.description)}</p>
       <h3>Responsibilities</h3><ul>${roleListItems(role.responsibilities)}</ul>
       <h3>Requirements</h3><ul>${roleListItems(role.requirements)}</ul>
-      <div class="notice notice-demo"><p>This example is not a current vacancy. This static site cannot receive or store applications. Please use the verified Primax Talent Connectors contact address when it is confirmed.</p></div>
-      <form class="role-application" data-local-form novalidate>
-        <h3>Application interest</h3><p>Use this sample form to see the intended fields. Information is not sent or saved.</p>
+      <form class="role-application" data-local-form data-form-type="candidate" novalidate>
+        <h3>Prepare an interest email</h3><p>Enter your details. Your email app will open; review and send the email yourself.</p>
         <div class="form-grid">
+          <input type="hidden" name="roleTitle" value="${escapeHtml(role.title)}">
           <div class="field"><label for="role-app-name">Full name <span aria-hidden="true">*</span></label><input id="role-app-name" name="name" autocomplete="name" required></div>
           <div class="field"><label for="role-app-email">Email <span aria-hidden="true">*</span></label><input id="role-app-email" name="email" type="email" autocomplete="email" required></div>
-          <div class="field"><label for="role-app-cv">CV (PDF or DOC, max 5 MB)</label><input id="role-app-cv" name="cv" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" data-file-limit="5242880"><span class="field-hint" data-file-feedback>Accepted: PDF, DOC, DOCX. Maximum size: 5 MB.</span></div>
-          <div class="field"><label for="role-app-linkedin">LinkedIn URL</label><input id="role-app-linkedin" name="linkedin" type="url" placeholder="https://www.linkedin.com/in/..."></div>
+          <div class="field"><label for="role-app-cv">CV (PDF or DOC, max 5 MB) <span aria-hidden="true">*</span></label><input id="role-app-cv" name="cv" type="file" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" data-file-limit="5242880" required><span class="field-hint" data-file-feedback>Accepted: PDF, DOC, DOCX. Maximum size: 5 MB.</span></div>
+          <div class="field"><label for="role-app-linkedin">LinkedIn URL <span aria-hidden="true">*</span></label><input id="role-app-linkedin" name="linkedin" type="url" placeholder="https://www.linkedin.com/in/..." required></div>
         </div>
-        <button class="button button-green" type="submit">Register interest</button><p class="form-feedback" role="status" aria-live="polite"></p>
+        <button class="button button-green" type="submit">Prepare email</button><p class="form-feedback" role="status" aria-live="polite"></p>
       </form>`;
     roleDialog.showModal();
   }
@@ -152,7 +246,16 @@
     });
     const empty = document.getElementById("role-empty");
     const count = document.getElementById("role-count");
+    const resultsHeading = document.getElementById("results-heading");
+    filterForm.hidden = roles.length === 0;
+    resultsHeading.hidden = roles.length === 0;
+    if (!roles.length) {
+      resultsRoot.hidden = true;
+      empty.hidden = false;
+      empty.innerHTML = '<h2>No open roles right now</h2><p>Join our talent network to hear about future roles.</p><a class="button button-green" href="contact.html#candidate-form">Join the Talent Network</a>';
+    }
     const updateRoles = function () {
+      if (!roles.length) return;
       const query = filterForm.elements.search.value.trim().toLocaleLowerCase();
       const filters = filterFields.map(function (field) { return [field[1], document.getElementById(field[0]).value]; });
       const matches = roles.filter(function (role) {
@@ -162,9 +265,12 @@
         });
       });
       resultsRoot.innerHTML = matches.map(roleCard).join("");
-      count.textContent = matches.length + (matches.length === 1 ? " example role" : " example roles");
+      count.textContent = matches.length + (matches.length === 1 ? " open role" : " open roles");
       empty.hidden = matches.length !== 0;
       resultsRoot.hidden = matches.length === 0;
+      if (matches.length === 0) {
+        empty.innerHTML = '<h2>No matching roles</h2><p>Try another search or clear the filters.</p>';
+      }
     };
     filterForm.addEventListener("input", updateRoles);
     filterForm.addEventListener("change", updateRoles);
@@ -227,7 +333,7 @@
       if (feedback) feedback.textContent = "This file is larger than the 5 MB limit.";
       return false;
     }
-    if (feedback) feedback.textContent = file.name + " · " + (file.size / (1024 * 1024)).toFixed(2) + " MB. The file will remain in the browser and may need to be attached manually when you send your email.";
+    if (feedback) feedback.textContent = file.name + " · " + (file.size / (1024 * 1024)).toFixed(2) + " MB. This file stays in your browser; attach it manually to your email.";
     return true;
   }
 
@@ -237,13 +343,16 @@
     const label = field.labels && field.labels.length ? field.labels[0].textContent.replace(/\*\s*$/, "").trim() : field.name;
     let value = "";
     if (field.type === "checkbox") {
-      value = field.checked ? "Yes" : "No";
+      if (!field.checked) return null;
+      value = "Yes";
     } else if (field.type === "file") {
-      value = field.files && field.files.length ? field.files[0].name : "No file selected";
+      value = field.files && field.files.length ? field.files[0].name : "";
+    } else if (field.multiple) {
+      value = Array.from(field.selectedOptions).map(function (option) { return option.value; }).join(", ");
     } else {
       value = field.value.trim();
     }
-    if (!value || value === "No" && field.type === "checkbox" && !field.checked) return null;
+    if (!value) return null;
     return label + ": " + value;
   }
 
@@ -253,9 +362,11 @@
       const entry = formatFormValue(form, element);
       if (entry) lines.push(entry);
     });
-    lines.push("", "Note: This email was prepared in the browser. Uploaded CV files cannot be attached reliably through mailto, so the file may need to be attached manually before sending.");
+    if (form.querySelector('input[type="file"][name="cv"]')) {
+      lines.push("", "Note: The CV is not attached. Please attach it manually before sending this email.");
+    }
     const body = lines.join("\n");
-    return "mailto:" + encodeURIComponent(recipientEmail) + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+    return "mailto:" + recipientEmail + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
   }
 
   document.addEventListener("change", function (event) {
@@ -274,18 +385,20 @@
       feedback.classList.add("is-error");
       return;
     }
-    const formType = form.id === "employer-inquiry" || form.dataset.formType === "employer" ? "employer" : "candidate";
+    const formType = form.dataset.formType === "employer" ? "employer" : "candidate";
     const recipientEmail = formType === "candidate" ? CONTACT_CONFIG.candidateEmail : CONTACT_CONFIG.employerEmail;
     if (!recipientEmail) {
       feedback.textContent = "The verified Primax Talent Connectors contact email for this form is still pending confirmation. Please provide the final verified address before enabling mailto submissions.";
       feedback.classList.add("is-error");
       return;
     }
-    const subject = formType === "candidate" ? "Candidate enquiry: Primax Talent Connectors" : "Employer enquiry: Primax Talent Connectors";
+    const roleTitle = form.elements.roleTitle && form.elements.roleTitle.value.trim();
+    const subject = formType === "candidate"
+      ? (roleTitle ? "Role interest - " + roleTitle : "Candidate profile - Primax Talent Connectors")
+      : "Employer enquiry - Primax Talent Connectors";
     const mailtoLink = buildMailtoLink(form, recipientEmail, subject);
     window.location.href = mailtoLink;
-    feedback.textContent = "Your email app has been opened with the completed information. Because mailto cannot reliably attach uploaded files, please attach the CV manually if required before sending.";
-    feedback.classList.add("is-success");
-    form.reset();
+    feedback.textContent = "Your email app should open with your details ready. Nothing has been sent yet; review the email and press Send." +
+      (formType === "candidate" ? " Attach your CV manually before sending." : "");
   });
 })();

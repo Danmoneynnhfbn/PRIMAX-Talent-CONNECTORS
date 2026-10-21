@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://primaxtalentconnectors.com/sitemap.xml
